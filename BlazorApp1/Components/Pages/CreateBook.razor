@@ -1,0 +1,38 @@
+﻿@using BlazorApp1.Components;
+@using BlazorApp1.Services;
+@using BlazorApp1.Models;
+@inject NavigationManager NavManager
+@inject ILibraryService LibraryService;
+@page "/create_book"
+
+<h3>CreateUser</h3>
+Title:
+<input @bind="bookTitle" />
+Author:
+<input @bind="@bookAuthor" />
+ISBN:
+<input @bind="@bookISBN" />
+<button @onclick="async () => {
+    await submitUpdate();
+}">
+    Create User
+</button>
+
+@code {
+    public string bookTitle { get; set; }
+    public string bookAuthor { get; set; }
+    public string bookISBN { get; set; }
+    private string bookPath = ".\\Data\\Books.csv";
+    private async Task submitUpdate()
+    {
+        Book book = new Book
+            {
+                Id = LibraryService.Books[^1].Id + 1,
+                Title = bookTitle,
+                Author = bookAuthor,
+                ISBN = bookISBN
+            };
+        await LibraryService.AddBook(book, bookPath);
+        NavManager.NavigateTo("/");
+    }
+}

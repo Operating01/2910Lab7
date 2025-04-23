@@ -1,0 +1,64 @@
+﻿@using BlazorApp1.Components
+@using BlazorApp1.Services
+@using BlazorApp1.Models
+@inject NavigationManager NavManager
+@inject ILibraryService LibraryService
+
+@page "/editbook/{bookId:int}"
+
+<h3>Edit Book</h3>
+
+Title:
+<input @bind="bookTitle" />
+Author:
+<input @bind="bookAuthor" />
+ISBN:
+<input @bind="bookISBN" />
+
+<button @onclick="async () => {
+    await SubmitUpdate();
+}">
+    Update Book
+</button>
+
+@code {
+    [Parameter]
+    public int bookId { get; set; }
+
+    public string bookTitle { get; set; }
+    public string bookAuthor { get; set; }
+    public string bookISBN { get; set; }
+    private string bookPath = ".\\Data\\Books.csv";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await setBook();
+    }
+
+    private async Task setBook()
+    {
+        var book = LibraryService.Books.FirstOrDefault(b => b.Id == bookId);
+        if (book != null)
+        {
+            bookTitle = book.Title;
+            bookAuthor = book.Author;
+            bookISBN = book.ISBN;
+        }
+        await Task.CompletedTask;
+    }
+
+    private async Task SubmitUpdate()
+    {
+        Book book = new Book
+            {
+                Id = bookId,
+                Title = bookTitle,
+                Author = bookAuthor,
+                ISBN = bookISBN
+            };
+
+        await LibraryService.EditBook(book, bookPath);
+        Console.WriteLine("Updating book");
+        NavManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,55 @@
+﻿@using BlazorApp1.Components;
+@using BlazorApp1.Services;
+@using BlazorApp1.Models;
+@inject NavigationManager NavManager
+@inject ILibraryService LibraryService;
+
+<h3></h3>
+@page "/edituser/{userId:int}"
+
+First name: <input @bind="firstName"/>
+Last name: <input @bind="@lastName" />
+Email: <input @bind="@newEmail" />
+<button @onclick="async () => {
+    await submitUpdate();
+}">
+    Update User
+</button>
+
+@code {
+    [Parameter]
+    public int userId { get; set; }
+    public string firstName { get; set; }
+    public string lastName { get; set; }
+    public string newEmail { get; set; }
+    private string userPath = ".\\Data\\Users.csv";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await setNames();
+    }
+
+    private async Task setNames()
+    {
+        var user = LibraryService.Users.FirstOrDefault(u => u.Id == userId);
+        string[] fullname = user.Name.Split(' ');
+        firstName = fullname[0];
+        lastName = fullname[1];
+        newEmail = user.Email;
+        await Task.CompletedTask;
+    }
+
+    private async Task submitUpdate()
+    {
+        User user = new User
+            {
+                Id = userId,
+                Name = firstName + " " + lastName,
+                Email = newEmail
+            };
+            await LibraryService.EditUser(user, userPath);
+            Console.WriteLine("updating");
+            NavManager.NavigateTo("/");
+    }
+
+}

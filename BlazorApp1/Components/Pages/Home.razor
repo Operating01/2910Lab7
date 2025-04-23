@@ -1,0 +1,33 @@
+﻿@using BlazorApp1.Components;
+@using BlazorApp1.Services;
+@using BlazorApp1.Models;
+@inject NavigationManager NavManager;
+@inject ILibraryService LibraryService;
+@page "/"
+
+<PageTitle>Users</PageTitle>
+<button style="float: right;" class="btn btn-primary" @onclick="@( () => NavManager.NavigateTo($"/create_user") )">Create User</button>
+@foreach(User user in LibraryService.Users)
+{
+    <div>
+    <p>@user.Id @user.Name @user.Email 
+    <button @onclick="async () =>
+    {   
+    await LibraryService.DeleteUser(user.Id, userPath);
+   // await LibraryService.ReadUsers(); 
+    }">
+        Delete User
+    </button>
+    <button @onclick="@( () => NavManager.NavigateTo($"/edituser/{user.Id}") )">Edit User</button>
+    </p>
+
+    </div>
+}
+
+@code{
+    private string userPath = ".\\Data\\Users.csv";
+        protected override async Task OnInitializedAsync()
+        {
+            await LibraryService.ReadUsers(userPath);
+        }
+}

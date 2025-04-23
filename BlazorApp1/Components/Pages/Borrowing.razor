@@ -1,0 +1,59 @@
+﻿@using BlazorApp1.Components;
+@using BlazorApp1.Services;
+@using BlazorApp1.Models;
+@inject NavigationManager NavManager
+@inject ILibraryService LibraryService;
+@page "/borrow"
+
+<h2>Borrowing</h2>
+To put a book into borrowing, enter the User's and Book's Respective ID's
+
+User: <input @bind="userId"/>
+Book: <input @bind="bookId"/>
+<button @onclick="async () => {
+    try{
+    await LibraryService.BorrowBook(userId, bookId);
+    }
+    catch (Services.BookAlreadyBorrowed e) {
+        errorMsg = e.Message;
+    }
+    catch (ArgumentNullException e) {
+        errorMsg = e.ParamName;
+    }
+    StateHasChanged();
+}"> 
+    Borrow Book
+</button> 
+<p style="font-style: italic">@errorMsg</p>
+@if (LibraryService.BorrowedBooks.Count == 0)
+{
+    <h3>Currently no borrowed books!</h3>
+}
+else
+{
+    foreach (var borrow in LibraryService.BorrowedBooks)
+    {
+        <h4>@borrow.Key.Name</h4>
+        foreach (var book in borrow.Value)
+        {
+            <p>
+                (@book.Id) @book.Title, by @book.Author, ISBN: @book.ISBN <button @onclick="async () => {
+                        await LibraryService.ReturnBook(borrow.Key.Id, book.Id);
+                        StateHasChanged();
+                    }">
+                                        Return Book
+                                    </button>
+            </p>
+        }
+    } <br />
+}
+@code {
+    public int userId { get; set; }
+    public int bookId { get; set; }
+    public string errorMsg { get; set; }
+    private string bookPath = ".\\Data\\Books.csv";
+    protected override async Task OnInitializedAsync()
+    {
+        await LibraryService.ReadBooks(bookPath);
+    }
+}

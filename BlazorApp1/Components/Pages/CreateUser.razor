@@ -1,0 +1,34 @@
+﻿@using BlazorApp1.Components;
+@using BlazorApp1.Services;
+@using BlazorApp1.Models;
+@inject NavigationManager NavManager
+@inject ILibraryService LibraryService;
+@page "/create_user"
+
+<h3>CreateUser</h3>
+Name:
+<input @bind="userName" />
+Email:
+<input @bind="@newEmail" />
+<button @onclick="async () => {
+    await submitUpdate();
+}">
+    Create User
+</button>
+
+@code {
+    public string userName { get; set; }
+    public string newEmail { get; set; }
+    private string userPath = ".\\Data\\User.csv";
+    private async Task submitUpdate()
+    {
+        User user = new User
+            {
+                Id = LibraryService.Users[^1].Id + 1,
+                Name = userName,
+                Email = newEmail
+            };
+        await LibraryService.AddUser(user, userPath);
+        NavManager.NavigateTo("/");
+    }
+}

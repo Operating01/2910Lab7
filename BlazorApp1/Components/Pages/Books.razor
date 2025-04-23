@@ -1,0 +1,33 @@
+﻿@using BlazorApp1.Components;
+@using BlazorApp1.Services;
+@using BlazorApp1.Models;
+@inject NavigationManager NavManager
+@inject ILibraryService LibraryService;
+@page "/books"
+
+<PageTitle>Books</PageTitle>
+<button style="float: right;" class="btn btn-primary" @onclick="@( () => NavManager.NavigateTo($"/create_book") )">Create Book</button>
+
+@foreach (Book book in LibraryService.Books)
+{
+    <div>
+        <p>(@book.Id) @book.Title , by @book.Author , ISBN: @book.ISBN
+        <button @onclick="async () =>
+        {
+            await LibraryService.DeleteBook(book.Id, bookPath);
+            await LibraryService.ReadBooks(bookPath);
+        }">
+            Delete User
+        </button>
+        <button @onclick="@( () => NavManager.NavigateTo($"/editbook/{book.Id}") )">Edit Book</button>
+        </p>
+    </div>
+}
+
+@code {
+    private string bookPath = ".\\Data\\Books.csv";
+    protected override async Task OnInitializedAsync()
+    {
+        await LibraryService.ReadBooks(bookPath);
+    }
+}
