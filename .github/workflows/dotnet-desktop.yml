@@ -45,14 +45,12 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
+    name: build-and-test-${{matrix.os}}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        configuration: [Debug, Release]
-
-    runs-on: [windows-latest, macOS-latest]  # For a list of available runner types, refer to
+        os: [ubuntu-latest, windows-latest, macOS-latest] # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
