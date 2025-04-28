@@ -17,7 +17,7 @@ namespace Lab6
         public void Setup()
         {
             _service = new LibraryService();
-            StreamReader userstrd = new StreamReader(".\\Data\\TUsers.csv");
+            StreamReader userstrd = new StreamReader(".//Data//TUsers.csv");
             //string u = userstrd.;
             
         }
@@ -66,8 +66,8 @@ namespace Lab6
         {
             var random = new Random();
             int randNum = random.Next(1000, 9999);
-            string tempfilepath = ".\\Data\\Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
-            File.Copy(".\\Data\\TBooks.csv", tempfilepath, overwrite: true);
+            string tempfilepath = ".//Data//Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
+            File.Copy(".//Data//TBooks.csv", tempfilepath, overwrite: true);
             try
             {
                 // Arrange 
@@ -82,7 +82,7 @@ namespace Lab6
                 await _service.ReadBooks(tempfilepath);
                 // Used to reset the data
                 List<Book> Books2 = _service.Books;
-                int count = Directory.GetFiles(".\\Data").Count();
+                int count = Directory.GetFiles(".//Data").Count();
 
                 // Act
                 Console.WriteLine("Got to Writing");
