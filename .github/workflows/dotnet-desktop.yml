@@ -46,16 +46,16 @@ on:
 
 jobs:
   build:
-    name: build-and-test-${{matrix.os}}
+    name: build-and-test-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest] # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+        # Available runner types: https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
     env:
-      Solution_Name: BlazorApp1.sln                        # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: Lab6/Lab6.csproj             # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Solution_Name: BlazorApp1.sln          # Your solution name
+      Test_Project_Path: Lab6/Lab6.csproj     # Your test project path
 
     steps:
     - name: Checkout
@@ -63,7 +63,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
@@ -74,7 +73,7 @@ jobs:
 
     - name: Build solution
       run: dotnet build ${{ env.Solution_Name }} --configuration Release --no-restore
-      
+
     - name: Test and publish results
       run: |
         dotnet test ${{ env.Test_Project_Path }} --no-restore --verbosity normal
