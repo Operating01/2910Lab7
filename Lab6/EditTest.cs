@@ -12,14 +12,15 @@ namespace Lab6
     {
         private LibraryService _service;
         private string u;
+        private string path;
 
         [TestInitialize]
         public void Setup()
         {
             _service = new LibraryService();
-            StreamReader userstrd = new StreamReader(".\\Data\\TUsers.csv");
             //string u = userstrd.;
-            
+            path = Directory.GetCurrentDirectory();
+
         }
 
         [TestMethod]
@@ -29,29 +30,29 @@ namespace Lab6
         {
             var random = new Random();
             int randNum = random.Next(1000, 9999);
-            string tempfilepath = ".\\Data\\Users" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
-            File.Copy(".\\Data\\TUsers.csv", tempfilepath, overwrite: true);
+            string tempfilepath = path + "//Data//Users" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
+            File.Copy($"{path}//Data//TUsers.csv", tempfilepath, overwrite: true);
             try
             {
-            // Arrange 
-                        BlazorApp1.Models.User user = new BlazorApp1.Models.User
-                        {
-                            Name = name,
-                            Id = id,
-                            Email = email
-                        };
-                        Console.WriteLine("Got to reading");
-                        await _service.ReadUsers(tempfilepath);
-                        // Used to reset the data
-                        List<BlazorApp1.Models.User> Users2 = _service.Users;
+                // Arrange 
+                BlazorApp1.Models.User user = new BlazorApp1.Models.User
+                {
+                    Name = name,
+                    Id = id,
+                    Email = email
+                };
+                Console.WriteLine("Got to reading");
+                await _service.ReadUsers(tempfilepath);
+                // Used to reset the data
+                List<BlazorApp1.Models.User> Users2 = _service.Users;
 
-                        //  Act
-                        Console.WriteLine("Got to Writing");
-                        await _service.EditUser(user, tempfilepath);
+                //  Act
+                Console.WriteLine("Got to Writing");
+                await _service.EditUser(user, tempfilepath);
 
-                        // Assert
-                        Console.WriteLine("Got to Asserting");
-                        Assert.AreEqual(_service.Users[id - 1].Name, name);
+                // Assert
+                Console.WriteLine("Got to Asserting");
+                Assert.AreEqual(_service.Users[id - 1].Name, name);
             }
             finally
             {
@@ -66,8 +67,8 @@ namespace Lab6
         {
             var random = new Random();
             int randNum = random.Next(1000, 9999);
-            string tempfilepath = ".\\Data\\Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
-            File.Copy(".\\Data\\TBooks.csv", tempfilepath, overwrite: true);
+            string tempfilepath = path + "//Data//Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
+            File.Copy($"{path}//Data//TBooks.csv", tempfilepath, overwrite: true);
             try
             {
                 // Arrange 
@@ -82,7 +83,7 @@ namespace Lab6
                 await _service.ReadBooks(tempfilepath);
                 // Used to reset the data
                 List<Book> Books2 = _service.Books;
-                int count = Directory.GetFiles(".//Data").Count();
+                int count = Directory.GetFiles($"{path}//Data").Count();
 
                 // Act
                 Console.WriteLine("Got to Writing");
@@ -92,11 +93,12 @@ namespace Lab6
                 Console.WriteLine("Got to Asserting");
                 Console.WriteLine(_service.Books.Count);
                 Assert.AreEqual(_service.Books[id - 1].Title, title);
-            } finally
+            }
+            finally
             {
                 File.Delete(tempfilepath);
             }
-            
+
         }
     }
 }

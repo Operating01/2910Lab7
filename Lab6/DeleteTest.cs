@@ -12,11 +12,15 @@ namespace Lab6
     {
         private LibraryService _service;
         private string u;
+        private string path;
 
         [TestInitialize]
         public void Setup()
         {
             _service = new LibraryService();
+            //string u = userstrd.;
+            path = Directory.GetCurrentDirectory();
+
         }
 
         [DataRow(1)]
@@ -26,8 +30,8 @@ namespace Lab6
         {
             var random = new Random();
             int randNum = random.Next(1000, 9999);
-            string tempfilepath = ".\\Data\\Users" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
-            File.Copy(".\\Data\\TUsers.csv", tempfilepath, overwrite: true);
+            string tempfilepath = path + "//Data//Users" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
+            File.Copy($"{path}//Data//TUsers.csv", tempfilepath, overwrite: true);
             try
             {
                 await _service.ReadUsers(tempfilepath);
@@ -48,8 +52,8 @@ namespace Lab6
         {
             var random = new Random();
             int randNum = random.Next(1000, 9999);
-            string tempfilepath = ".\\Data\\Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
-            File.Copy(".\\Data\\TBooks.csv", tempfilepath, overwrite: true);
+            string tempfilepath = path + "//Data//Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
+            File.Copy($"{path}//Data//TBooks.csv", tempfilepath, overwrite: true);
             try
             {
                 await _service.ReadBooks(tempfilepath);
@@ -71,8 +75,8 @@ namespace Lab6
             string err = null;
             var random = new Random();
             int randNum = random.Next(1000, 9999);
-            string tempfilepath = ".\\Data\\Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
-            File.Copy(".\\Data\\TBooks.csv", tempfilepath, overwrite: true);
+            string tempfilepath = path + "//Data//Books" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
+            File.Copy($"{path}//Data//TBooks.csv", tempfilepath, overwrite: true);
             try
             {
                 try
@@ -100,8 +104,8 @@ namespace Lab6
             string err = null;
             var random = new Random();
             int randNum = random.Next(1000, 9999);
-            string tempfilepath = ".\\Data\\Users" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
-            File.Copy(".\\Data\\TUsers.csv", tempfilepath, overwrite: true);
+            string tempfilepath = path + "//Data//Users" + randNum.ToString() + DateTime.Now.Ticks.ToString() + ".csv";
+            File.Copy($"{path}//Data//TUsers.csv", tempfilepath, overwrite: true);
             try
             {
                 try
